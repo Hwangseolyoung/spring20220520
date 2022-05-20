@@ -20,12 +20,13 @@ public class BoardService {
 	@Autowired
 	private ReplyMapper replyMapper;
 	
-	public List<BoardDto> listBoard() {
-		// TODO Auto-generated method stub
-		return mapper.selectBoardAll();
+	public List<BoardDto> listBoard(String type, String keyword) {
+		// 검색 기능 추가 파라미터 값 할당해주기
+		return mapper.selectBoardAll(type, "%" + keyword +"%");
 	}
 
 	public boolean insertBoard(BoardDto board) {
+		// 한국 표준시간으로 세팅 변경
 //		board.setInserted(LocalDateTime.now());
 		return mapper.insertBoard(board) == 1;
 	}
@@ -47,6 +48,8 @@ public class BoardService {
 		
 		return mapper.deleteBoard(id) == 1;
 	}
+	
+	
 
 }
 
