@@ -3,10 +3,30 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.choong.spr.mapper.BoardMapper">
-
+	
+	<!-- 검색 기능 추가 -->
+	<!-- 기존 쿼리에 검색기능 동적 쿼리 작성 -->
 	<select id="selectBoardAll" resultType="com.choong.spr.domain.BoardDto">
 		SELECT b.id, b.title, b.inserted, COUNT(r.id) numOfReply
 		FROM Board b LEFT JOIN Reply r ON b.id = r.board_id
+		
+		<!-- if test 조건에 의해 WHERE이 실행될 수도 있고 안될수도 있다. -->
+		<!-- 실행이 안되면 기존 Board 목록이 화면에 출력된다. -->
+		<if test="keyword != '%%'">
+			<choose>
+				<when test="type == 'all'">
+					WHERE b.title LIKE #{keyword } OR
+						  b.body LIKE #{keyword }
+				</when>
+				<when test="type == 'title'">
+					WHERE b.title LIKE #{keyword } 
+				</when>
+				<when test="type == 'body'">
+					WHERE b.body LIKE #{keyword }
+				</when>
+			</choose>
+		</if>
+		
 		GROUP BY b.id
 		ORDER BY b.id DESC
 	</select>
