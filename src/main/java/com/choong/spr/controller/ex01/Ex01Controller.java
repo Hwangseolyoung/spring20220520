@@ -48,7 +48,6 @@ public class Ex01Controller {
 		List<Products> list = mapper.selectProductsThen(price);
 		
 		model.addAttribute("list", list);
-
 		
 	}
 	
