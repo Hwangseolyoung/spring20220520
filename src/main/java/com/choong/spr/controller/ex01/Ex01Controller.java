@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.choong.spr.domain.ex01.Cartegory;
 import com.choong.spr.domain.ex01.Products;
@@ -47,6 +48,7 @@ public class Ex01Controller {
 		List<Products> list = mapper.selectProductsThen(price);
 		
 		model.addAttribute("list", list);
+
 		
 	}
 	
