@@ -13,194 +13,282 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 <script>
-	$(document).ready(function() { 
+	$(document).ready(function() {
 		/* 이벤트가 발생하면 하는 일을 넣어준다 */
 		/* 클릭이되면 해당 url 경로의 controller가 일한 흔적을 남긴다. */
-		$("#button1").click(function() { 
-			$.ajax({url : "/spr2/ex03/sub03"});
+		$("#button1").click(function() {
+			$.ajax({
+				url : "/spr2/ex03/sub03"
+			});
 		});
-		
+
 		$("#button2").click(function() {
-			$.ajax({url : "/spr2/ex03/sub04"});
+			$.ajax({
+				url : "/spr2/ex03/sub04"
+			});
 		});
-		
+
 		/* 같은 상태에서 이벤트가 발생되면 일을 하기때문에 위에 합쳐서 작성함
 		$(document).ready(function() {
 			$("#button2").click(function() {
 				$.ajax({url : "/spr2/ex03/sub04"});
 			});
 		});
-	 	*/
-		
+		 */
+
 		$("#button3").click(function() {
 			/* type(method) 프로퍼티에 요청방식 명시해주면 된다.(기본값:get) */
 			$.ajax({
-					url : "/spr2/ex03/sub05", 
-					type : "get"
+				url : "/spr2/ex03/sub05",
+				type : "get"
 			});
 		});
 		$("#button4").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub06",
-					method : "post" // type과 같은 일(type=method)
-			});		
+				url : "/spr2/ex03/sub06",
+				method : "post" // type과 같은 일(type=method)
+			});
 		});
-		
+
 		$("#button5").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub07", 
-					type : "delete"
+				url : "/spr2/ex03/sub07",
+				type : "delete"
 			});
 		});
-		
+
 		$("#button6").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub08", 
-					type : "put"
+				url : "/spr2/ex03/sub08",
+				type : "put"
 			});
 		});
-		
-		
+
 		$("#button7").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub09",
-					type : "get", // type의 기본값은 get이므로 생략가능
-					// data를 Object에 담아 보내줄 수 있다.
-					// 쿼리스트링 name=value 쌍으로 보내진다.
-					// http://localhost:8080/spr2/ex03/sub09?title=epl&writer=son
-					data : { 
-							title : "epl",
-							writer : "son"
+				url : "/spr2/ex03/sub09",
+				type : "get", // type의 기본값은 get이므로 생략가능
+				// data를 Object에 담아 보내줄 수 있다.
+				// 쿼리스트링 name=value 쌍으로 보내진다.
+				// http://localhost:8080/spr2/ex03/sub09?title=epl&writer=son
+				data : {
+					title : "epl",
+					writer : "son"
 				}
 			});
 		})
-		
+
 		$("#button8").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub10",
-					type : "post",
-					data : {
-							name : "sujung",
-							address : "Seoul"
-					}
+				url : "/spr2/ex03/sub10",
+				type : "post",
+				data : {
+					name : "sujung",
+					address : "Seoul"
+				}
 			});
 		})
-		
+
 		$("#button9").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub11",
-					type : "post",
-					data : { // data를 Book객체에 보내기
-							title : "득점왕 되기",
-							writer : "son"
-					}
+				url : "/spr2/ex03/sub11",
+				type : "post",
+				data : { // data를 Book객체에 보내기
+					title : "득점왕 되기",
+					writer : "son"
+				}
 			});
 		})
-		
+
 		$("#button10").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub10",
-					type : "post",
-					// encoded string에 담아 data 보내기
-					data : "name=donald&address=newyork"
+				url : "/spr2/ex03/sub10",
+				type : "post",
+				// encoded string에 담아 data 보내기
+				data : "name=donald&address=newyork"
 			});
 		})
-		
+
 		$("#button11").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub11",
-					type : "post",
-					// encoded string에 담아 Book 객체에 data 보내기
-					data : "title=coding life&writer=sunja"
+				url : "/spr2/ex03/sub11",
+				type : "post",
+				// encoded string에 담아 Book 객체에 data 보내기
+				data : "title=coding life&writer=sunja"
 			});
 		})
-		
+
 		$("#button12").click(function(e) {
 			// html 방식 전송 멈춤 상태로 먼저 만들어 준다.
-			e.preventDefault(); 
-			
+			e.preventDefault();
+
 			// const : 블록 범위의 상수를 선언
 			//.serialize() : ajax 방식의 submit을 위한 string으로 만들어준다.(jQuery method)
 			const dataString = $("#form1").serialize();
-			
+
 			$.ajax({
-					url : "/spr2/ex03/sub10",
-					type : "post",
-					data : dataString
+				url : "/spr2/ex03/sub10",
+				type : "post",
+				data : dataString
 			});
 		});
-			
+
 		$("#button13").click(function(e) {
 			e.preventDefault();
-				
+
 			const data = $("#form2").serialize();
-				
+
 			$.ajax({
-					url : "/spr2/ex03/sub11",
-					type : "post",
-					data : data
+				url : "/spr2/ex03/sub11",
+				type : "post",
+				data : data
 			});
 		});
-		
+
 		$("#button14").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub12",
-					type : "post",
-					// success : 응답을 잘 받으면 function(함수)에 담긴 일을 한다
-					// function(파라미터에는 3가지를 받을 수 있다.)
-					// function(1.response data, 2.String textStatus, 3.jqXHR jqXHR)
+				url : "/spr2/ex03/sub12",
+				type : "post",
+				// success : 응답을 잘 받으면 function(함수)에 담긴 일을 한다
+				// function(파라미터에는 3가지를 받을 수 있다.)
+				// function(1.response data, 2.String textStatus, 3.jqXHR jqXHR)
+				// controller에서 return해주는 값이 data라는 이름으로 들어오는 것이다.
+				// 값이 들어오는 이름은 자유롭게 변경가능하다.
+				success : function(data) {
+					console.log("요청 성공!!");
+					console.log("받은 데이터", data);
+				}
+			});
+		});
+
+		$("#button15").click(function() {
+			$.ajax({
+				url : "/spr2/ex03/sub13",
+				type : "get",
+				success : function(data) {
 					// controller에서 return해주는 값이 data라는 이름으로 들어오는 것이다.
 					// 값이 들어오는 이름은 자유롭게 변경가능하다.
-					success : function(data) {
-						console.log("요청 성공!!");
-						console.log("받은 데이터", data);
-					}
+					// console.log(data);
+					$("#result1").text(data);
+				}
+			});
+		})
+
+		$("#button16").click(function() {
+			$.ajax({
+				url : "/spr2/ex03/sub14",
+				type : "get",
+				success : function(book) {
+					/* Book 객체를 json string으로 변환하여 출력함
+					console.log(book); // {title: '스프링', writer: '김자반'}
+					console.log(book.title);
+					console.log(book.writer);
+					 */
+					$("#result2").text(book.title);
+					$("#result3").text(book.writer);
+
+				}
+			});
+		})
+
+		$("#button17").click(function() {
+			$.ajax({
+				url : "/spr2/ex03/sub15",
+				success : function(map) {
+					// map으로 받은 객체를 
+					// json 자바스크립트 객체 표현방법인 String으로 변환해서 보여준다.
+					console.log(map); // {address: 'london', name: '손흥민', age: '30'}
+				}
+			});
+		})
+
+		$("#button18").click(function() {
+			$.ajax({
+				url : "/spr2/ex03/sub16",
+				type : "get",
+				success : function(data) {
+					console.log(data);
+				},
+				error : function() {
+					// error : 요청에 실패할 경우 
+					// 값은 함수타입이여야 한다.
+					console.log("무엇인가 잘못됨");
+				}
+
+			});
+		});
+
+		$("#button19").click(function() {
+			$.ajax({
+				url : "/spr2/ex03/sub16",
+				type : "get",
+				success : function(data) {
+					console.log(data);
+				},
+				error : function() {
+					$("#message19").show();
+					$("#message19").text("처리 중 오류 발생").fadeOut(3000);
+				}
 			});
 		});
 		
-		$("#button15").click(function() {
+		$("#button20").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub13",
-					type : "get",
-					success : function(data) {
-						// controller에서 return해주는 값이 data라는 이름으로 들어오는 것이다.
-						// 값이 들어오는 이름은 자유롭게 변경가능하다.
-						// console.log(data);
-						$("#result1").text(data);
-					}
+				url : "/spr2/ex03/sub17",
+				type : "get",	
+				success : function(data) {
+					console.log("받은 데이터", data);
+				},
+				error : function() {
+					console.log("무엇인가 잘못됨!!");
+				}
 			});
-		}) 
+		});
 		
-		$("#button16").click(function() {
+		$("#button21").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub14",
-					type : "get",
-					success : function(book) {
-						/* Book 객체를 json string으로 변환하여 출력함
-						console.log(book); // {title: '스프링', writer: '김자반'}
-						console.log(book.title);
-						console.log(book.writer);
-						*/
-						$("#result2").text(book.title);
-						$("#result3").text(book.writer);
-						
-					}
+				url : "/spr2/ex03/sub18",
+				type : "get",
+				success : function(data) {
+					$("#message20").show();
+					$("#message20").removeClass("error").text(data).fadeOut(3000);
+				},
+				
+				error : function(data) {
+					$("#message20").show();
+					$("#message20").addClass("error").text("무엇인가 잘못됨").fadeOut(3000);
+				}
 			});
-		})
+		});
 		
-		$("#button17").click(function() {
+		$("#button22").click(function() {
 			$.ajax({
-					url : "/spr2/ex03/sub15",
-					success : function(map) {
-						// map으로 받은 객체를 
-						// json 자바스크립트 객체 표현방법인 String으로 변환해서 보여준다.
-						console.log(map); // {address: 'london', name: '손흥민', age: '30'}
-					}
+				url : "/spr2/ex03/sub18",
+				type : "get",
+				success : function(data) {
+					$("#message20").show();
+					$("#message20").removeClass("error").text(data).fadeOut(3000);
+				},
+				
+				error : function(data) {
+					$("#message20").show();
+					$("#message20").addClass("error").text("무엇인가 잘못됨").fadeOut(3000);
+				},
+				// complete : success, error가 아닌 항상 실행될 코드
+				complete : function(data) {
+					console.log("항상 실행됨!!");
+				}
 			});
-		})
+		});
 	});
-	
 </script>
+
+<style>
+.error {
+	background-color: red;
+	color: yellow;
+}
+</style>
 
 <title>Insert title here</title>
 </head>
@@ -298,6 +386,27 @@
 	<br />
 	<p>map 객체를 json string으로 출력하기</p>
 	<button id="button17">map to json</button>
+	
+	<hr />
+	
+	<p>요청이 실패할 경우</p>
+	
+	<button id="button18">잘못된 요청</button>
+	
+	<br />
+	
+	<button id="button19">잘못된 요청2</button>
+	<p class="error" id="message19"></p>
+	
+	<button id="button20">서버에서 에러 응답</button>
+	
+	<br />
+	
+	<button id="button21">50%확률로 ok</button>
+	
+	<p id="message20"></p>
+	
+	<button id="button22">50%확률로 ok</button>
 </body>
 </html>
 

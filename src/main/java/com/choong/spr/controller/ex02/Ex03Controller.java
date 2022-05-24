@@ -3,6 +3,7 @@ package com.choong.spr.controller.ex02;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -136,5 +137,30 @@ public class Ex03Controller {
 		
 		return map;
 		
+	}
+	// ResponseEntity : 에러응답 코드 구현 메소드
+	// @ResponseBody 어노테이션과 같이 사용할 수 있으며
+	// 본문이 타입파라미터에 들어가면됨
+	@GetMapping("sub17")
+	public ResponseEntity<String> methode17() {
+		// 콘솔에 GET http://localhost:8080/spr2/ex03/sub17 500 찍힘
+		return ResponseEntity.status(500).body("internal server error");
+	}
+	/*
+	@GetMapping("sub18")
+	public ResponseEntity<String> methode17() {
+		boolean success = service.
+	}
+	*/
+	
+	@GetMapping("sub18")
+	public ResponseEntity<String> method18() {
+		boolean success = Math.random() > 0.5;
+		
+		if (success) {
+			return ResponseEntity.ok().body("data you want");
+		} else {
+			return ResponseEntity.status(500).body("something wrong");
+		}
 	}
 }
