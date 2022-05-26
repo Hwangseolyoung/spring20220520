@@ -118,4 +118,27 @@ public class MemberController {
 			return "redirect:/member/get";
 		}
 	}
+	
+	// 수정된 회원 정보 업데이트
+	@PostMapping("modify") // 파라미터로 넘어온 oldPassword 명시(기존 password와 같은지 확인해야함)
+	public String modifyMember(MemberDto dto, String oldPassword, RedirectAttributes rttr) {
+		System.out.println(dto);
+		System.out.println(oldPassword);
+		
+		boolean success = service.modifyMember(dto, oldPassword);
+		
+		if(success) {
+			rttr.addFlashAttribute("message", "회원 정보가 수정되었습니다.");
+		} else {
+			rttr.addFlashAttribute("message", "회원 정보가 수정되지 않았습니다.");
+		}
+		
+		
+		rttr.addFlashAttribute("member", dto); // model object 객체를 모델처렁
+		// 리다이렉트시 수정된 회원 아이디 query string으로 전달
+		rttr.addAttribute("id", dto.getId()); // query string 객체를 스트링으로 표현
+		
+		return "redirect:/member/get";
+				
+	}
 }

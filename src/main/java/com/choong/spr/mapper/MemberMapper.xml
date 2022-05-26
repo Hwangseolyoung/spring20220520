@@ -58,4 +58,13 @@
 		DELETE FROM Member
 		WHERE id = #{id}
 	</delete>
+	
+	<!-- 회원정보 수정 업데이트 -->
+	<update id="updateMember">
+		UPDATE Member
+		SET password = #{password},
+			email = #{email},
+			nickName = #{nickName}
+		WHERE id = #{id}
+	</update>
 </mapper>

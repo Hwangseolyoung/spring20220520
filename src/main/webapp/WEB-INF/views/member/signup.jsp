@@ -28,7 +28,7 @@
 			e.preventDefault();
 			
 			$(this).attr("disabled", "");// 버튼을 여러번 누르지 못하도록
-			const data = {
+			const data = { // find : 안쪽 엘레멘트를 얻어오는 메소드
 					id : $("#form1").find("[name=id]").val(),
 			};
 			
@@ -202,7 +202,7 @@
 		<p id="nickNameMessage1"></p>
 		<br/>
 		
-		<button id="submitButton1"disabled>회원가입</button>
+		<button id="submitButton1" disabled>회원가입</button>
 	</form>
 	
 	

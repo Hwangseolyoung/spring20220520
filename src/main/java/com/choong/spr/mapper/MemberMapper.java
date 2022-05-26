@@ -26,6 +26,9 @@ public interface MemberMapper {
 
 	// get.jsp 회원 탈퇴
 	int deleteMemberById(String id);
+	
+	// 회원 정보 수정 업데이트
+	int updateMember(MemberDto dto);
 
 
 }
