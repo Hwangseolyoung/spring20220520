@@ -7,8 +7,13 @@
 	<!-- 검색 기능 추가 -->
 	<!-- 기존 쿼리에 검색기능 동적 쿼리 작성 -->
 	<select id="selectBoardAll" resultType="com.choong.spr.domain.BoardDto">
-		SELECT b.id, b.title, b.inserted, COUNT(r.id) numOfReply
+		SELECT b.id, 
+			   b.title, 
+			   b.inserted, 
+			   COUNT(r.id) numOfReply,
+			   m.nickName writerNickName  <!-- member nickName추가함 -->
 		FROM Board b LEFT JOIN Reply r ON b.id = r.board_id
+						  JOIN Member m ON b.memberId = m.id <!-- member nickName추가함 -->
 		
 		<!-- if test 조건에 의해 WHERE이 실행될 수도 있고 안될수도 있다. -->
 		<!-- 실행이 안되면 기존 Board 목록이 화면에 출력된다. -->
@@ -32,13 +37,20 @@
 	</select>
 	
 	<insert id="insertBoard" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-		INSERT INTO Board (title, body)
-		VALUES (#{title}, #{body})
+		INSERT INTO Board (title, body, memberId)
+		VALUES (#{title}, #{body}, #{memberId}) <!-- 로그인 정보 추가 -->
 	</insert>
 	
 	<select id="selectBoardById" resultType="com.choong.spr.domain.BoardDto">
-		SELECT b.id, b.title, b.body, b.inserted, COUNT(r.id) numOfReply
+		SELECT b.id, 
+			   b.title, 
+			   b.body, 
+			   b.inserted, 
+			   COUNT(r.id) numOfReply,
+			   m.id memberId, <!-- 글 쓴 사람만 삭제 가능하도록 memberId 얻어오기 추가 -->
+			   m.nickName writerNickName  <!-- member nickName추가함 -->
 		FROM Board b LEFT JOIN Reply r ON b.id = r.board_id
+						  JOIN Member m ON b.memberId = m.id <!-- member nickName추가함 -->
 		WHERE b.id = #{id}
 	</select>
 	
