@@ -5,7 +5,7 @@
 <mapper namespace="com.choong.spr.mapper.MemberMapper">
 	
 	<!-- 회원가입 -->
-	<insert id="insertMember" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+	<insert id="insertMember">
 		INSERT INTO Member (id, password, email, nickName)
 		VALUES (#{id}, #{password}, #{email}, #{nickName})
 	</insert>
@@ -67,4 +67,16 @@
 			nickName = #{nickName}
 		WHERE id = #{id}
 	</update>
+	
+	<!-- 권한 추가 -->
+	<insert id="insertAuth">
+		INSERT INTO Auth (memberId, role)
+		VALUES (#{id}, #{auth})
+	</insert>
+	
+	<!-- 권한 삭제 -->
+	<delete id="deleteAuthById">
+		DELETE FROM Auth
+		WHERE memberId = #{id} 
+	</delete>
 </mapper>

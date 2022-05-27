@@ -2,6 +2,8 @@ package com.choong.spr.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.choong.spr.domain.MemberDto;
 
 public interface MemberMapper {
@@ -29,6 +31,12 @@ public interface MemberMapper {
 	
 	// 회원 정보 수정 업데이트
 	int updateMember(MemberDto dto);
+	
+	// 권한 테이블 권한추가 코드
+	int insertAuth(@Param("id") String id, @Param("auth") String auth);
+	
+	// 권한 테이블, 권한 삭제
+	int deleteAuthById(String id);
 
 
 }
