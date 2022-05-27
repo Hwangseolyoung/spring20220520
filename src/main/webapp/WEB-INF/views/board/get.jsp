@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!-- security tag 설정 -->
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
@@ -251,9 +253,17 @@
 		<div class="row">
 			<div class="col">
 				<h1>글 본문 
-					<button id="edit-button1" class="btn btn-secondary">
-						<i class="fa-solid fa-pen-to-square"></i>
-					</button>
+					<!-- 작성자만 버튼 볼 수 있도록 수정 -->
+					<sec:authorize access="isAuthenticated()">
+						<!-- el에서 사용가능하도록 변수(page영역)에 담아주기 -->
+						<sec:authentication property="principal" var="principal"/>
+						
+						 <c:if test="${principal.username == board.memberId }">
+							<button id="edit-button1" class="btn btn-secondary">
+								<i class="fa-solid fa-pen-to-square"></i>
+							</button>
+						 </c:if>
+					</sec:authorize>
 				</h1>
 				
 				<c:if test="${not empty message }">
@@ -276,6 +286,11 @@
 						<textarea class="form-control" name="body" id="textarea1"
 							cols="30" rows="10" readonly>${board.body }</textarea>
 					</div>
+					
+					<div>
+						<label for="input3" class="form-label">작성자</label>
+						<input class="form-control" type="text" value="${board.writerNickName }" readonly/>
+					</div> 
 					
 					<div>
 						<label for="input2" class="form-label">작성일시</label>
