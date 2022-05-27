@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.choong.spr.domain.MemberDto;
 import com.choong.spr.mapper.MemberMapper;
@@ -21,14 +22,21 @@ public class MemberService {
 	
 	// 회원가입 
 	public boolean addMember(MemberDto member) {
-		
+		System.out.println(member);
 		// 평문암호를 암호화(encoding)
 		String encodedPassword = passwordEncoder.encode(member.getPassword());
 				
 		// 암호화된 암호를 다시 세팅
 		member.setPassword(encodedPassword);
-				
-		return mapper.insertMember(member) == 1;
+		
+		// insert member
+		int cnt1 = mapper.insertMember(member);
+		
+		System.out.println(member);
+		// 권한 테이블, 권한 추가 
+		int cnt2 = mapper.insertAuth(member.getId(), "ROLE_USER");
+		
+		return cnt1 == 1 && cnt2 == 1;
 	}
 	
 	// 회원가입 id 중복체크
@@ -62,6 +70,7 @@ public class MemberService {
 	}
 	
 	// get.jsp 회원 탈퇴
+	@Transactional
 	public boolean removeMember(MemberDto dto) {// id(primary key)로 확인
 		MemberDto member = mapper.selectMemberById(dto.getId());
 		
@@ -73,7 +82,11 @@ public class MemberService {
 		// matches(rawPassword, encodedPassword)
 		// 사용자가 입력한 pw와 인코딩된 pw가 일치하는지 확인해주는 메소드
 		if(passwordEncoder.matches(rawPW, encodedPW)) {
-			return mapper.deleteMemberById(dto.getId()) == 1;
+			// 권한 테이블, 권한 삭제(FOREIGN KEY 제약사항으로 먼저 삭제해주기)
+			int cnt1 = mapper.deleteAuthById(dto.getId());
+			// member 테이블 삭제
+			int cnt2 = mapper.deleteMemberById(dto.getId());
+			return cnt2 == 1 ; // 권한이 2개 이상일 수 있으므로 member테이블만 체크
 		}
 		
 		/* 암호 인코더 하기전 코드
