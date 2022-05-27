@@ -1,5 +1,6 @@
 package com.choong.spr.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.choong.spr.domain.BoardDto;
+import com.choong.spr.domain.MemberDto;
 import com.choong.spr.domain.ReplyDto;
 import com.choong.spr.service.BoardService;
 import com.choong.spr.service.ReplyService;
@@ -33,6 +35,7 @@ public class BoardController {
 	public void list(@RequestParam(name = "keyword", defaultValue = "") String keyword,
 					 @RequestParam(name = "type", defaultValue = "") String type, 
 					 Model model){
+		
 		List<BoardDto> list = service.listBoard(type, keyword);
 		
 		model.addAttribute("boardList", list);
@@ -53,8 +56,17 @@ public class BoardController {
 		
 	}
 	
-	@PostMapping("insert")
-	public String insert(BoardDto board, RedirectAttributes rttr) {
+	// 로그인 정보 추가
+	@PostMapping("insert") // Principal : security login 정보가 담겨있다.
+	public String insert(BoardDto board, Principal principal, RedirectAttributes rttr) {
+		/*
+		System.out.println(principal);
+		System.out.println(principal.getName()); // username
+		*/
+		
+		// 로그인 username 얻기
+		board.setMemberId(principal.getName());
+		
 		boolean success = service.insertBoard(board);
 		
 		if (success) {
@@ -76,31 +88,51 @@ public class BoardController {
 		
 	}
 	
-	@PostMapping("modify")
-	public String modify(BoardDto dto, RedirectAttributes rttr) {
-		boolean success = service.updateBoard(dto);
-		
-		if (success) {
-			rttr.addFlashAttribute("message", "글이 수정되었습니다.");
+	// 게시글 작성자만 수정 가능하도록 추가
+	@PostMapping("modify") // Principal : security login 정보가 담겨있다.
+	public String modify(BoardDto dto, Principal principal, RedirectAttributes rttr) {
+		// 수정하는 게시글 정보 얻기
+		BoardDto oldBoard = service.getBoardById(dto.getId());
+		// 게시물 작성자(memberId)와 principal의 name과 비교해서 같을 때만 진행
+		if(oldBoard.getMemberId().equals(principal.getName())) {
+			boolean success = service.updateBoard(dto);
+			
+			if (success) {
+				rttr.addFlashAttribute("message", "글이 수정되었습니다.");
+			} else {
+				rttr.addFlashAttribute("message", "글이 수정되지 않았습니다.");
+			}
+			
 		} else {
-			rttr.addFlashAttribute("message", "글이 수정되지 않았습니다.");
+			rttr.addFlashAttribute("message", "수정 권한이 없습니다.");
 		}
 		
 		rttr.addAttribute("id", dto.getId());
 		
-		return "redirect:/board/get";
+		return "redirect:/board/list"; // 권한이 없으면 list로 이동
 	}
 	
-	@PostMapping("remove")
-	public String remove(BoardDto dto, RedirectAttributes rttr) {
+	// 게시글 작성자만 삭제 가능하도록 추가
+	@PostMapping("remove") // Principal : security login 정보가 담겨있다.
+	public String remove(BoardDto dto, Principal principal, RedirectAttributes rttr) {
 		
-		boolean success = service.deleteBoard(dto.getId());
-		
-		if (success) {
-			rttr.addFlashAttribute("message", "글이 삭제 되었습니다.");
+		// 게시물 정보 얻고
+		BoardDto oldBoard = service.getBoardById(dto.getId());
+		// 게시물 작성자(memberId)와 principal의 name과 비교해서 같을 때만 진행
+		if (oldBoard.getMemberId().equals(principal.getName())) {
+			boolean success = service.deleteBoard(dto.getId());
+			
+			if (success) {
+				rttr.addFlashAttribute("message", "글이 삭제 되었습니다.");
+				
+			} else {
+				rttr.addFlashAttribute("message", "글이 삭제 되지않았습니다.");
+			}
 			
 		} else {
-			rttr.addFlashAttribute("message", "글이 삭제 되지않았습니다.");
+			rttr.addFlashAttribute("message", "삭제 권한이 없습니다.");
+			rttr.addAttribute("id", dto.getId());
+			return "redirect:/board/get"; // 권한이 없으면 게시글 화면으로
 		}
 		
 		return "redirect:/board/list";
