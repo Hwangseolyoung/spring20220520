@@ -11,6 +11,10 @@ public class BoardDto {
 	private String title;
 	private String body;
 	private LocalDateTime inserted;
+	// 로그인 memberId 추가
+	private String memberId;
+	// member nickName 추가
+	private String writerNickName;
 	private int numOfReply;
 
 	public String getPrettyInserted() {
