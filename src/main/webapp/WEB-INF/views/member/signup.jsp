@@ -178,32 +178,39 @@
 <body>
 	
 	<my:navBar current="signup"></my:navBar>
-	
-	<form id="form1" action="${appRoot }/member/signup" method="post">
-		아이디 : <input type="text" name="id" /> 
-		<!-- submit 역할을 하지 않도록 type="button" 명시 -->
-		<button id="checkIdButton1" type="button">아이디 중복 확인</button>
-		<p id="idMessage1"></p>
-		<br/>
-		
-		패스워드 : <input id="passwordInput1" type="password" name="password" /> <br/>
-		
-		패스워드 확인 : <input id="passwordInput2" type="text" name="passwordConfirm" /> <br/>
-		<p id="passwordMessage1"></p>
-		<br/>
-		
-		이메일 : <input type="email" name="email" /> 
-		<button id="checkEmailButton2" type="button">이메일 중복 확인</button>
-		<p id="emailMessage1"></p>
-		<br/>
-		
-		닉네임 : <input type="text" name="nickName" />
-		<button id="checkNickNameButton3" type="button">닉네임 중복 확인</button>
-		<p id="nickNameMessage1"></p>
-		<br/>
-		
-		<button id="submitButton1" disabled>회원가입</button>
-	</form>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<form id="form1" action="${appRoot }/member/signup" method="post">
+					
+				
+					아이디 : <input type="text" name="id" /> 
+					<!-- submit 역할을 하지 않도록 type="button" 명시 -->
+					<button id="checkIdButton1" type="button">아이디 중복 확인</button>
+					<p id="idMessage1"></p>
+					<br/>
+					
+					패스워드 : <input id="passwordInput1" type="password" name="password" /> <br/>
+					
+					패스워드 확인 : <input id="passwordInput2" type="text" name="passwordConfirm" /> <br/>
+					<p id="passwordMessage1"></p>
+					<br/>
+					
+					이메일 : <input type="email" name="email" /> 
+					<button id="checkEmailButton2" type="button">이메일 중복 확인</button>
+					<p id="emailMessage1"></p>
+					<br/>
+					
+					닉네임 : <input type="text" name="nickName" />
+					<button id="checkNickNameButton3" type="button">닉네임 중복 확인</button>
+					<p id="nickNameMessage1"></p>
+					<br/>
+					
+					<button id="submitButton1" disabled>회원가입</button>
+				</form>
+			</div>
+		</div>
+	</div>
 	
 	
 </body>
