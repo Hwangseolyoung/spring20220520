@@ -20,6 +20,12 @@ public interface BoardMapper {
 
 	int deleteBoard(int id);
 	
+	// 해당 멤버가 쓴 게시글에 달린 다른사람 댓글 삭제
+	List<BoardDto> listByMemberId(String memberId);
+
+	// 해당 멤버가 쓴 게시글 삭제
+	void deleteByMemberId(String memberId);
+	
 	
 
 }
