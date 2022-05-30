@@ -67,12 +67,14 @@
 		WHERE id = #{id }
 	</delete>
 	
+	<!-- 해당 멤버가 쓴 게시글에 달린 다른사람 댓글 select 후 delete -->
 	<select id="listByMemberId" resultType="com.choong.spr.domain.BoardDto">
 		SELECT id
 		FROM Board
 		WHERE memberId = #{memberId}
 	</select>
 	
+	<!-- 해당 멤버가 쓴 게시글에 달린 다른사람 댓글 삭제 -->
 	<delete id="deleteByMemberId">
 		DELETE FROM Board
 		WHERE memberId = #{memberId }

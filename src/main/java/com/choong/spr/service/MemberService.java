@@ -25,6 +25,9 @@ public class MemberService {
 	@Autowired
 	private BoardMapper boardMapper;
 	
+	@Autowired
+	private BoardService boardService;
+	
 	// 평문암호를 암호화(encoding)
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -92,15 +95,15 @@ public class MemberService {
 		// 사용자가 입력한 pw와 인코딩된 pw가 일치하는지 확인해주는 메소드
 		if(passwordEncoder.matches(rawPW, encodedPW)) {
 			// 삭제 순서가 중요하다!
-			// 댓글 삭제
+			// 회원 탈퇴시 작성 댓글 삭제
 			replyMapper.deleteByMemberId(dto.getId());
 			
-			// 해당 멤버가 쓴 게시글에 달린 다른사람 댓글 삭제
+			// 해당 멤버가 쓴 게시글에 달린 다른사람 댓글 delete
 			List<BoardDto> boardList = boardMapper.listByMemberId(dto.getId());
 			for (BoardDto board : boardList) {
-				replyMapper.deleteByBoardId(board.getId());
+				boardService.deleteBoard(board.getId());
 			}
-			
+
 			// 해당 멤버가 쓴 게시글 삭제
 			boardMapper.deleteByMemberId(dto.getId());
 			

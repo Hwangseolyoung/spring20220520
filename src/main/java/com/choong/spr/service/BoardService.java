@@ -40,10 +40,10 @@ public class BoardService {
 		// TODO Auto-generated method stub
 		return mapper.updateBoard(dto) == 1;
 	}
-
+	
 	@Transactional
 	public boolean deleteBoard(int id) {
-
+		
 		replyMapper.deleteByBoardId(id);
 		
 		return mapper.deleteBoard(id) == 1;

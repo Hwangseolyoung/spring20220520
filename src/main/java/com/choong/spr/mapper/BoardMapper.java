@@ -20,7 +20,7 @@ public interface BoardMapper {
 
 	int deleteBoard(int id);
 	
-	// 해당 멤버가 쓴 게시글에 달린 다른사람 댓글 삭제
+	// 해당 멤버가 쓴 게시글에 달린 다른사람 댓글 select 후 delete
 	List<BoardDto> listByMemberId(String memberId);
 
 	// 해당 멤버가 쓴 게시글 삭제

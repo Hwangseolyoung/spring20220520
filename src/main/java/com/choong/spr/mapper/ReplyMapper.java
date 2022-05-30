@@ -14,15 +14,16 @@ public interface ReplyMapper {
 	List<ReplyDto> selectAllBoardId(@Param("boardId") int boardId, @Param("memberId") String memberId);
 
 	int updateReply(ReplyDto dto);
-
-	int deleteReply(int id);
-
-	void deleteByBoardId(int boardId);
 	
+	int deleteReply(int id);
+	
+	void deleteByBoardId(int id);
+
 	// 댓글 쓴 사람만 수정가능하도록 추가
 	ReplyDto selectReplyById(int id);
 	
-	
+	// 회원 탈퇴시 작성 댓글 삭제
 	void deleteByMemberId(String memberId);
+
 
 }

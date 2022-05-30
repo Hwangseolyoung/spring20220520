@@ -34,11 +34,6 @@
 		WHERE id = #{id}
 	</delete>
 	
-	<delete id="deleteByBoardId">
-		DELETE FROM Reply
-		WHERE board_id = #{boardId}
-	</delete>
-	
 	<!-- 댓글 쓴 사람만 수정가능하도록 추가 -->
 	<select id="selectReplyById" resultType="com.choong.spr.domain.ReplyDto">
 		SELECT id,
@@ -51,6 +46,7 @@
 			   
 	</select>
 	
+	<!-- 회원 탈퇴시 작성 댓글 삭제 -->
 	<delete id="deleteByMemberId">
 		DELETE FROM Reply
 		WHERE memberId = #{memberId}
