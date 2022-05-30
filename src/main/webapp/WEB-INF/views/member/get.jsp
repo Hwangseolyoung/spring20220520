@@ -195,8 +195,8 @@
 	
 	<div>
 		아이디 : <input type="text" value="${member.id }" readonly/> <br /> <%-- readonly 변경불가능 --%>
-		패스워드 : <input type="password" value="${member.password }" name="password" id="passwordInput1"> <br />
-		패스워드 확인 : <input type="password" value=""${member.password } name="pwConfirm" id="passwordInput2"/> <br /> 
+		패스워드 : <input type="password" name="password" id="passwordInput1"> <br />
+		패스워드 확인 : <input type="password"  name="pwConfirm" id="passwordInput2"/> <br /> 
 						<p id="passwordMessage1"></p> <br /> 
 		이메일 : <input type="text" value="${member.email }" name="email" id="emailInput1"/> <button id="checkEmailButton1" disabled >이메일 중복확인</button> <br />
 				<p id="emailMessage1"></p> <br /> 
