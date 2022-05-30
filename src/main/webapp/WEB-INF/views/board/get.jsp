@@ -70,23 +70,26 @@
 						// ` ` : 작성한 그대로 스트링 자체가됨 띄어쓰기, 엔터 등등..
 						// '\${객체의 프로퍼티}' : 객체의 프로퍼티를 원하는 위치에 그대로 작성할 수 있다.
 						// el코드 -> 자바 스크립트 코드로 변경, $앞에 \ 붙이고 reply -> list[i] 변경 
+						// 작성자 닉네임 추가(89번째 줄)
+						// Javascript Injection 발생 가능성 높음 수정함(96번째 줄)
+						// 수정 전 <span>\${list[i].content }</span>
+						// own이 true일 때만 수정, 삭제 버튼 span class(84번째 줄)
 						replyElement.html(`
 							   
 								<div id="replyDisplayContainer\${list[i].id }">
 									<div class="fw-bold">
 										<i class="fa-solid fa-comment"></i>
 										\${list[i].prettyInserted}
-									 	<span class="reply-edit-toggle-button badge bg-info text-dark" 
-									 			id="replyEditToggleButton\${list[i].id }" 
-									 			data-reply-id="\${list[i].id }" >
-									 		<i class="fa-solid fa-pen-to-square"></i>
-								 		</span>
-									 	<span class="reply-delete-button badge bg-danger"
-									 		data-reply-id="\${list[i].id }">
-									 		<i class="fa-solid fa-trash-can"></i>
-									 	</span>
+										
+										<span id="modifyButtonWrapper\${list[i].id }">
+										</span>
+									 	
 									</div>
-							 		\${list[i].content }
+									<span class="badge bg-light text-dark">
+										<i class="fa-solid fa-user"></i>
+										\${list[i].writerNickName }
+									</span>
+							 		<span id="replyContent\${list[i].id}"></span>
 								 	
 								 	
 								</div>
@@ -110,6 +113,24 @@
 								`); 
 						
 						replyListElement.append(replyElement);
+						// Javascript Injection 발생 가능성 높음 수정함
+						$("#replyContent" + list[i].id).text(list[i].content);
+						
+						// own이 true일 때만 수정,삭제 버튼 보이기
+						if (list[i].own) {
+							$("#modifyButtonWrapper" + list[i].id).html(`
+								<span class="reply-edit-toggle-button badge bg-info text-dark"
+									id="replyEditToggleButton\${list[i].id }"
+									data-reply-id="\${list[i].id }">
+									<i class="fa-solid fa-pen-to-square"></i>
+								</span>
+								<span class="reply-delete-button badge bg-danger"
+									data-reply-id="\${list[i].id }">
+									<i class="fa-solid fa-trash-can"></i>
+								</span>
+							`);
+						}
+						
 						
 					} // end of for
 					
@@ -144,6 +165,7 @@
 								listReply();
 							},
 							error : function() {
+								$("#replyMessage1").show().text("댓글을 수정할 수 없습니다.").fadeOut(3000);
 								console.log("수정 실패");
 							},
 							complete : function() {
@@ -190,6 +212,7 @@
 									$("#replyMessage1").show().text(data).fadeOut(3000);
 								},
 								error : function() {
+									$("#replyMessage1").show().text("댓글을 삭제할 수 없습니다.").fadeOut(3000);
 									console.log(replyId + "댓글 삭제 중 문제 발생됨");
 								},
 								complete : function() {
@@ -233,6 +256,7 @@
 					// console.log(data);
 				},
 				error : function() {
+					$("#replyMessage1").show().text("댓글을 작성할 수 없습니다.").fadeOut(3000);
 					console.log("문제 발생");
 				},
 				complete : function() {
