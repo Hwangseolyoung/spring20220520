@@ -20,16 +20,18 @@
 		<security:remember-me />
 		
 		<!-- access 특정경로 이동 캐치 (책 673~674) -->
-		<!-- 해당 경로 진입시 로그인 창으로 이동됨 -->
+		<!-- access="isAuthenticated()": 인증된 회원설정, 아니면 해당 경로 진입시 로그인 창으로 이동됨 -->
 		<!-- 게시글 create, update, delete -->
 		<security:intercept-url pattern="/board/insert" access="isAuthenticated()"/>
 		<security:intercept-url pattern="/board/modify" access="isAuthenticated()"/>
 		<security:intercept-url pattern="/board/remove" access="isAuthenticated()"/>
 		
 		<!-- 댓글 create, update, delete -->
-		<security:intercept-url pattern="/reply/insert" access="isAuthenticated()"/>
+		<!-- 302 리다이렉트 응답처리 안됨 (controller에서 처리하도록 변경)
+		<security:intercept-url pattern="/reply/insert" access="isAuthenticated()"/> 
 		<security:intercept-url pattern="/reply/modify" access="isAuthenticated()"/>
 		<security:intercept-url pattern="/reply/remove" access="isAuthenticated()"/>
+		-->
 		
 		<!-- 회원 목록은 관리자만 볼 수 있도록 -->
 		<security:intercept-url pattern="/member/list" access="hasRole('ADMIN')"/>
