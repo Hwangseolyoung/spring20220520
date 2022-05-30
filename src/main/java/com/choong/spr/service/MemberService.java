@@ -7,14 +7,23 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.choong.spr.domain.BoardDto;
 import com.choong.spr.domain.MemberDto;
+import com.choong.spr.mapper.BoardMapper;
 import com.choong.spr.mapper.MemberMapper;
+import com.choong.spr.mapper.ReplyMapper;
 
 @Service
 public class MemberService {
 	
 	@Autowired
 	private MemberMapper mapper;
+	
+	@Autowired
+	private ReplyMapper replyMapper;
+	
+	@Autowired
+	private BoardMapper boardMapper;
 	
 	// 평문암호를 암호화(encoding)
 	@Autowired
@@ -82,11 +91,24 @@ public class MemberService {
 		// matches(rawPassword, encodedPassword)
 		// 사용자가 입력한 pw와 인코딩된 pw가 일치하는지 확인해주는 메소드
 		if(passwordEncoder.matches(rawPW, encodedPW)) {
+			// 삭제 순서가 중요하다!
+			// 댓글 삭제
+			replyMapper.deleteByMemberId(dto.getId());
+			
+			// 해당 멤버가 쓴 게시글에 달린 다른사람 댓글 삭제
+			List<BoardDto> boardList = boardMapper.listByMemberId(dto.getId());
+			for (BoardDto board : boardList) {
+				replyMapper.deleteByBoardId(board.getId());
+			}
+			
+			// 해당 멤버가 쓴 게시글 삭제
+			boardMapper.deleteByMemberId(dto.getId());
+			
 			// 권한 테이블, 권한 삭제(FOREIGN KEY 제약사항으로 먼저 삭제해주기)
-			int cnt1 = mapper.deleteAuthById(dto.getId());
+			mapper.deleteAuthById(dto.getId());
 			// member 테이블 삭제
-			int cnt2 = mapper.deleteMemberById(dto.getId());
-			return cnt2 == 1 ; // 권한이 2개 이상일 수 있으므로 member테이블만 체크
+			int cnt = mapper.deleteMemberById(dto.getId());
+			return cnt == 1 ; // 권한이 2개 이상일 수 있으므로 member테이블만 체크
 		}
 		
 		/* 암호 인코더 하기전 코드
