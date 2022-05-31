@@ -35,6 +35,8 @@
 		
 		<!-- 회원 목록은 관리자만 볼 수 있도록 -->
 		<security:intercept-url pattern="/member/list" access="hasRole('ADMIN')"/>
+		<!-- admin 전용 암호 초기화 -->
+		<security:intercept-url pattern="/member/initpw" access="hasRole('ADMIN')"/>
 		<!-- 회원 read, update, delete -->
 		<security:intercept-url pattern="/member/get" access="isAuthenticated()"/>
 		<security:intercept-url pattern="/member/remove" access="isAuthenticated()"/>
