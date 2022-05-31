@@ -187,7 +187,8 @@
 </script>
 </head>
 <body>
-	<my:navBar current="get"></my:navBar>
+	<!-- 로그인한 회원만 정보보기로 변경 get -> memberInfo -->
+	<my:navBar current="memberInfo"></my:navBar>
 	
 	<div>
 		<p>${message }</p>
