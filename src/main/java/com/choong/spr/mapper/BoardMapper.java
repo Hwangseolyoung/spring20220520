@@ -26,6 +26,15 @@ public interface BoardMapper {
 	// 해당 멤버가 쓴 게시글 삭제
 	void deleteByMemberId(String memberId);
 	
+	// file upload 추가
+	void insertFile(@Param("boardId") int boardId, @Param("fileName")String originalFilename);
+	
+	// 파일 목록 읽기
+	String selectFileByBoardId(int id);
+	
+	// 파일 테이블 삭제
+	void deleteFileByBoardId(int id);
+	
 	
 
 }

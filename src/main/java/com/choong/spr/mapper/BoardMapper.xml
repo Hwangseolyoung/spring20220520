@@ -48,9 +48,11 @@
 			   b.inserted, 
 			   COUNT(r.id) numOfReply,
 			   m.id memberId, <!-- 글 쓴 사람만 삭제 가능하도록 memberId 얻어오기 추가 -->
-			   m.nickName writerNickName  <!-- member nickName추가함 -->
+			   m.nickName writerNickName,  <!-- member nickName추가함 -->
+			   f.fileName <!-- file 가져오기 추가함 -->
 		FROM Board b LEFT JOIN Reply r ON b.id = r.board_id
 						  JOIN Member m ON b.memberId = m.id <!-- member nickName추가함 -->
+					 LEFT JOIN File f ON b.id = f.boardId <!-- file 가져오기 추가(파일이 없는 게시물도 있으므로 LEFT JOIN -->
 		WHERE b.id = #{id}
 	</select>
 	
@@ -78,5 +80,24 @@
 	<delete id="deleteByMemberId">
 		DELETE FROM Board
 		WHERE memberId = #{memberId }
+	</delete>
+	
+	<!-- file upload 추가 -->
+	<insert id="insertFile">
+		INSERT INTO File (boardId, fileName)
+		VALUES (#{boardId}, #{fileName})
+	</insert>
+	
+	<!-- 파일 목록 읽기(delete) -->
+	<select id="selectFileByBoardId" resultType="string">
+		SELECT fileName
+		FROM File
+		WHERE boardId = #{boardId}
+	</select>
+	
+	<!-- 파일 테이블 삭제 -->
+	<delete id="deleteFileByBoardId">
+		DELETE FROM File
+		WHERE boardId = #{boardId}
 	</delete>
 </mapper>
