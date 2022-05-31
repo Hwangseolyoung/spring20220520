@@ -150,6 +150,15 @@ public class MemberService {
 		return false;
 	}
 
+	// admin 전용 암호 초기화(아이디->암호)
+	public boolean initPassword(String id) {
+		// 암호 encoding
+		String pw = passwordEncoder.encode(id);
+		
+		return mapper.updateInitMember(id, pw) == 1;
+		
+	}
+
 	
 	
 
