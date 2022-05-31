@@ -5,7 +5,7 @@
 <mapper namespace="com.choong.spr.mapper.MemberMapper">
 	
 	<!-- 회원가입 -->
-	<insert id="insertMember">
+	<insert id="insertMember" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
 		INSERT INTO Member (id, password, email, nickName)
 		VALUES (#{id}, #{password}, #{email}, #{nickName})
 	</insert>
@@ -79,4 +79,11 @@
 		DELETE FROM Auth
 		WHERE memberId = #{id} 
 	</delete>
+	
+	<!-- admin 전용 암호 초기화(아이디->암호) -->
+	<update id="updateInitMember">
+		UPDATE Member
+		SET password = #{pw}
+		WHERE id = #{id}
+	</update>
 </mapper>

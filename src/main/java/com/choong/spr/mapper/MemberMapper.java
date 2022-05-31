@@ -37,6 +37,9 @@ public interface MemberMapper {
 	
 	// 권한 테이블, 권한 삭제
 	int deleteAuthById(String id);
+	
+	// admin 전용 암호 초기화(아이디->암호)
+	int updateInitMember(@Param("id") String id, @Param("pw") String pw);
 
 
 }
