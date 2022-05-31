@@ -17,7 +17,8 @@ public interface ReplyMapper {
 	
 	int deleteReply(int id);
 	
-	void deleteByBoardId(int id);
+	// 댓글 테이블 삭제
+	void deleteByBoardId(int boardId);
 
 	// 댓글 쓴 사람만 수정가능하도록 추가
 	ReplyDto selectReplyById(int id);
