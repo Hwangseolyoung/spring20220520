@@ -204,7 +204,7 @@
 							$.ajax({
 								url : "${appRoot}/reply/delete/" + replyId, // @PathVariable
 								type : "delete",
-								success : function() {
+								success : function(data) {
 									console.log(replyId + "댓글 삭제됨");
 									// 댓글 list refresh
 									listReply();
@@ -309,6 +309,11 @@
 						<label class="form-label" for="textarea1">본문</label>
 						<textarea class="form-control" name="body" id="textarea1"
 							cols="30" rows="10" readonly>${board.body }</textarea>
+					</div>
+					
+					<div>
+						<!-- 임시 저장소 경로작성(나중에 AWS로 옮김) -->
+						<img src="file:///C:/imgtmp/board/${board.id }/${board.fileName }" alt="" />
 					</div>
 					
 					<div>
