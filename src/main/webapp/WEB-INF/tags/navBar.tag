@@ -11,7 +11,16 @@
 <c:url value="/member/list" var="memberListUrl"></c:url>
 <c:url value="/member/login" var="loginUrl"></c:url>
 <c:url value="/logout" var="logoutUrl"></c:url>
+<!-- admin 전용 암호 초기화 -->
+<c:url value="/member/initpw" var="initPasswordUrl"></c:url>
 
+<%-- 회원정보링크 --%>
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal" var="principal"/>
+	<c:url value="/member/get" var="memberInfoUrl">
+		<c:param name="id" value="${principal.username }" />
+	</c:url>
+</sec:authorize>
 
 <nav class="navbar navbar-expand-md navbar-light bg-light mb-3">
   <div class="container">
@@ -42,12 +51,23 @@
         	<a href="${signupUrl }" class="nav-link ${current == 'signupUrl' ? 'active' : '' }">회원가입</a>
         </li>
         
+        <!-- 로그인 했을때만 회원 정보 수정 -->
+        <sec:authorize access="isAuthenticated()">
+        	<li class="nav-item">
+        		<a href="${memberInfoUrl }" class="nav-link ${current == 'memberInfo' ? 'active' : '' }">회원정보</a>
+        	</li>
+        </sec:authorize>
+        
         <!-- 관리자에게만 회원목록 보여주기 -->
         <sec:authorize access="hasRole('ADMIN')">
         	<!-- 회원목록 추가 -->
 	        <li class="nav-item">
 	        	<a href="${memberListUrl }" class="nav-link ${current == 'memberList' ? 'active' : '' }">회원목록</a>
 	        </li>
+	        <!-- admin 전용 암호 초기화 -->
+	        <div class="nav-item">
+	        	<a href="${initPasswordUrl }" class="nav-link">암호초기화</a>
+	        </div>
         </sec:authorize>
         
         <!-- 로그인 하면 로그인 안보이기 -->
