@@ -16,6 +16,8 @@ public class BoardDto {
 	// member nickName 추가
 	private String writerNickName;
 	private int numOfReply;
+	// 1개 파일 업로드 추가
+	private String fileName;
 
 	public String getPrettyInserted() {
 		// 24시간 이내면 시간만
