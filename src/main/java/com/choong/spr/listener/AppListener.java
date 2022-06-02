@@ -33,6 +33,11 @@ public class AppListener implements ServletContextListener {
          ServletContext application = sce.getServletContext();
          
          application.setAttribute("appRoot", application.getContextPath());
+         
+         // AWS s3 root 추가
+         String imageUrl = "https://bucket0207-0811.s3.ap-northeast-2.amazonaws.com";
+         application.setAttribute("imageUrl", imageUrl);
+         
     }
 	
 }
