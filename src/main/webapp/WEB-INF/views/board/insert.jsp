@@ -32,7 +32,8 @@
 					</div>
 					<div>
 						파일  <!-- 이미지 파일만 업로드 가능하도록 설정 accept="image/*" -->
-						<input type="file" name="file" accept="image/*"/> 
+						<!-- multiple="multiple" : 여러파일 선택할 수 있도록 설정 -->
+						<input multiple="multiple" type="file" name="file" accept="image/*"/> 
 					</div>
 					
 					<button class="btn btn-primary">작성</button>
