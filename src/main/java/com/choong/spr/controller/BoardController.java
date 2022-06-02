@@ -1,6 +1,7 @@
 package com.choong.spr.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,9 @@ public class BoardController {
 	// 로그인 정보 추가
 	@PostMapping("insert") 
 	public String insert(BoardDto board, 
-			MultipartFile file, // file upload 추가
+			// 여러파일 선택할 수 있도록 설정
+			// 배열로 변경함 MultipartFile file -> MultipartFile[] file
+			MultipartFile[] file, // file upload 추가
 			Principal principal, // Principal : security login 정보가 담겨있다.
 			RedirectAttributes rttr) {
 		/*
@@ -72,14 +75,24 @@ public class BoardController {
 		System.out.println(file.getSize()); // 파일 사이즈
 		 */
 		
-		if (file.getSize() > 0) { // file이 넘어오지 않으면 size가 0이다.
-			// fileName setting
-			board.setFileName(file.getOriginalFilename());			
+//		if (file.getSize() > 0) { // file이 넘어오지 않으면 size가 0이다.
+//			// fileName setting
+//			board.setFileName(file.getOriginalFilename());			
+//		}
+		
+		// 여러파일 선택할 수 있도록 설정
+		if (file != null) {
+			List<String> fileList = new ArrayList<String>();
+			for(MultipartFile f : file) {
+				fileList.add(f.getOriginalFilename());
+			}
+			
+			board.setFileName(fileList);
 		}
 		
 		// 로그인 username 얻기
 		board.setMemberId(principal.getName());
-		
+		// insertBoard 배열타입으로 변경함(파일 여러개 업로드)                  
 		boolean success = service.insertBoard(board, file); // file upload 추가
 		
 		if (success) {
@@ -95,7 +108,9 @@ public class BoardController {
 	public void get(int id, Model model) {
 		BoardDto dto = service.getBoardById(id);
 		List<ReplyDto> replyList = replyService.getReplyByBoardId(id);
+		
 		model.addAttribute("board", dto);
+		
 		// 게시물 로딩 후 ajax로 처리하기 위해 삭제
 //		model.addAttribute("replyList", replyList);
 		
