@@ -1,6 +1,7 @@
 package com.choong.spr.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Data;
 
@@ -17,7 +18,8 @@ public class BoardDto {
 	private String writerNickName;
 	private int numOfReply;
 	// 1개 파일 업로드 추가
-	private String fileName;
+	// 여러파일 선택할 수 있도록 변경 String -> List<String>
+	private List<String> fileName;
 
 	public String getPrettyInserted() {
 		// 24시간 이내면 시간만
