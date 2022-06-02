@@ -311,14 +311,17 @@
 							cols="30" rows="10" readonly>${board.body }</textarea>
 					</div>
 					
-					<div>
-						<!-- 임시 저장소 경로작성(나중에 AWS로 옮김) -->
-						<img src="file:///C:/imgtmp/board/${board.id }/${board.fileName }" alt="" />
-					</div>
+					<!-- AWS s3 파일 여러개 추가함 -->
+					<c:forEach items="${board.fileName }" var="file">
+						<div>
+							<img src="${imageUrl }/board/${board.id }/${file }" alt="" />
+						</div>
+					</c:forEach>
 					
 					<div>
 						<label for="input3" class="form-label">작성자</label>
-						<input class="form-control" type="text" value="${board.writerNickName }" readonly/>
+						<input id="input3" class="form-control" type="text" 
+							value="${board.writerNickName }" readonly/>
 					</div> 
 					
 					<div>
