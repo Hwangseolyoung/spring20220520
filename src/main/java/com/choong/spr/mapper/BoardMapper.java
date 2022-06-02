@@ -35,6 +35,9 @@ public interface BoardMapper {
 	// 파일 테이블 삭제
 	void deleteFileByBoardId(int id);
 	
+	// 여러파일 가져오기 
+	List<String> selecteFileNameByBoard(int boardId);
+	
 	
 
 }
