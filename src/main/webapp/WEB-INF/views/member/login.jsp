@@ -14,27 +14,67 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 <title>Insert title here</title>
+
+<!-- google font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+
+<style>
+	/* reset style */
+	*{
+		
+		font-family: 'Noto Sans KR', sans-serif;
+	}
+	
+	html, body {
+		margin: 0;
+		padding: 0;
+	}
+	
+	.container {
+		background-color:#e8f5e9;
+	}
+	
+
+</style>
 </head>
 <body>
 	
-	<my:navBar current="login"></my:navBar>
 	<div class="container">
-		<div class="row">
-			<div class="col">
+		<div class="row justify-content-center" >
+			<div class="col-12 col-lg-6" >
 			
 				<h1>로그인</h1>
 				
 				<form action="${appRoot }/login" method="post">
-					아이디 : <input type="text" name="username" /> <br>
-					패스워드 : <input type="password" name="password" /> <br>
-					<input type="checkbox" name="remember-me"/> 자동 로그인 <br />
-					<input type="submit" value="로그인" />
+					<label for="usernameInput1" class="form-label">
+						아이디 
+					</label>
+					<input id="usernameInput1" class="form-control" type="text" name="username" />
+					
+					<br/>
+					
+					<label for="passwordInput1" class="form-label">
+						패스워드				
+					</label>
+					<input id="passwordInput1" class="form-control" type="password" name="password" />
+					
+					
+					<div class="form-check">
+						<input type="checkbox" name="remember-me" id="rememberMeCheck1" />
+					
+						<label for="rememberMeCheck1" class="form-check-label">
+							자동 로그인 
+						</label>
+					</div>
+					
+					<br/>
+					
+					<input class="btn btn-primary" type="submit" value="로그인" />
 				</form>
-				
 			</div>
 		</div>
 	</div>
-	
-
 </body>
 </html>
