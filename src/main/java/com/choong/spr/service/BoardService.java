@@ -68,22 +68,30 @@ public class BoardService {
 		// 게시글 등록
 		int cnt = mapper.insertBoard(board);
 		
+		// 여러파일 등록 메소드 사용
+		addFiles(board.getId(), files);
+		
+		return cnt == 1;
+	}
+	
+	// 여러파일 등록 메소드 
+	// insertBoard, modify에서 사용함
+	private void addFiles(int id, MultipartFile[] files) {
 		// 파일 등록(여러개 파일 등록으로 수정)
 		if (files != null) {
 			for (MultipartFile file : files) {
 				if (file.getSize() > 0) {
-					mapper.insertFile(board.getId(), file.getOriginalFilename());
+					mapper.insertFile(id, file.getOriginalFilename());
 					// 파일 저장 코드 추가(폴더만들기용:board.getId())
 					/* saveFile(board.getId(), file); */
-					saveFileAwsS3(board.getId(), file); // s3에 업로드
+					saveFileAwsS3(id, file); // s3에 업로드
 				}
 	
 			}
 		}
-		return cnt == 1;
 	}
 	
-	// s3에 업로드 메소드(위에서 사용함)
+	// s3에 업로드 메소드(addFiles에서 사용함)
 	private void saveFileAwsS3(int id, MultipartFile file) {
 		// 파일 객체마다 키를 가지고 있다.
 		// 키 - 폴더명과 파일명의 조합
@@ -138,18 +146,39 @@ public class BoardService {
 		
 		return board;
 	}
-
-	public boolean updateBoard(BoardDto dto) {
-		// TODO Auto-generated method stub
-		return mapper.updateBoard(dto) == 1;
+	
+	// 게시글 수정시 파일 추가기능 파라미터 MultipartFile[] addFileList
+	// 게시글 수정시 파일 삭제기능 파라미터 String[] removeFileList
+	@Transactional
+	public boolean updateBoard(BoardDto dto, List<String> removeFileList, MultipartFile[] addFileList) {
+		if (removeFileList != null) {
+			// 게시글 수정시 선택한 파일만 지우기 
+			for (String fileName : removeFileList) {
+				deleteFromAwsS3(dto.getId(), fileName);
+				mapper.deleteFileByBoardIdAndFileName(dto.getId(), fileName);
+			}
+		}
+		
+		if (addFileList != null) {
+			// File 테이블에 추가된 파일 insert
+			// s3에 upload
+			// 파일 저장 메소드 사용함
+			addFiles(dto.getId(), addFileList);
+			
+		}
+		// Board 테이블 update
+		int cnt = mapper.updateBoard(dto);
+		
+		return cnt == 1;
 	}
 	
 	@Transactional
 	public boolean deleteBoard(int id) {
-		// 파일 목록 읽기
+		/* 파일 목록 읽기(1개 파일)
 		String fileName = mapper.selectFileByBoardId(id);
 		
-		/* 실제 파일 삭제
+		
+		// 실제 파일 삭제
 		if(fileName != null && !fileName.isEmpty()) {
 			String folder = "C:/imgtmp/board/" + id + "/";
 			String path = folder + fileName;
@@ -163,13 +192,17 @@ public class BoardService {
 			dir.delete();
 			
 		}
-		*/
 		
-		// aws s3에서 지우기
+		// aws s3에서 지우기(1개 파일)
 		deleteFromAwsS3(id, fileName);
 		
-		// 파일 테이블 삭제
-		mapper.deleteFileByBoardId(id);
+		*/
+		
+		// 여러 파일 목록 읽기(List로 수정)
+		List<String> fileList = mapper.selecteFileNameByBoard(id);
+		
+		// 게시글에서 여러파일 지우는 메소드 사용
+		removeFiles(id, fileList);
 		
 		// 댓글 테이블 삭제
 		replyMapper.deleteByBoardId(id);
@@ -177,7 +210,19 @@ public class BoardService {
 		return mapper.deleteBoard(id) == 1;
 	}
 	
-	// aws s3에서 지우는 메소드
+	// 게시글에서 여러파일 지우는 메소드(deleteBoard 사용됨)
+	private void removeFiles(int id, List<String> fileList) {
+		// aws s3에서 여러파일 지우기(수정)
+		for(String fileName : fileList) {
+			deleteFromAwsS3(id, fileName);
+			
+		}
+		
+		// 파일 테이블 삭제
+		mapper.deleteFileByBoardId(id);
+	}
+	
+	// aws s3에서 파일 지우는 메소드
 	private void deleteFromAwsS3(int id, String fileName) {
 		String key = "board/" + id + "/" +fileName;
 		
