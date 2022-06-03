@@ -38,6 +38,10 @@ public interface BoardMapper {
 	// 여러파일 가져오기 
 	List<String> selecteFileNameByBoard(int boardId);
 	
+	// 게시글 수정시 선택한 파일만 지우기 
+	void deleteFileByBoardIdAndFileName(@Param("boardId") int id,
+			@Param("fileName") String fileName);
+	
 	
 
 }
