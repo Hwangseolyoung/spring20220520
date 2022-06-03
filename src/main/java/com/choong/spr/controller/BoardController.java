@@ -118,12 +118,19 @@ public class BoardController {
 	
 	// 게시글 작성자만 수정 가능하도록 추가
 	@PostMapping("modify") // Principal : security login 정보가 담겨있다.
-	public String modify(BoardDto dto, Principal principal, RedirectAttributes rttr) {
+	public String modify(BoardDto dto, 
+			// 게시글 수정시 선택파일 삭제 추가
+			// 어노테이션 사용 이유 : 배열 사용시 value 받도록 붙이기 
+			@RequestParam(name="removeFileList", required = false) ArrayList<String> removeFileList, 
+			MultipartFile[] addFileList, // 게시글 수정시 파일 추가기능 파라미터, addFileList: jsp input name으로 넘어옴  
+			Principal principal, 
+			RedirectAttributes rttr) {
 		// 수정하는 게시글 정보 얻기
 		BoardDto oldBoard = service.getBoardById(dto.getId());
+		
 		// 게시물 작성자(memberId)와 principal의 name과 비교해서 같을 때만 진행
 		if(oldBoard.getMemberId().equals(principal.getName())) {
-			boolean success = service.updateBoard(dto);
+			boolean success = service.updateBoard(dto, removeFileList, addFileList); // addFileList : 수정시 파일 추가
 			
 			if (success) {
 				rttr.addFlashAttribute("message", "글이 수정되었습니다.");
@@ -136,8 +143,7 @@ public class BoardController {
 		}
 		
 		rttr.addAttribute("id", dto.getId());
-		
-		return "redirect:/board/list"; // 권한이 없으면 list로 이동
+		return "redirect:/board/get"; 
 	}
 	
 	// 게시글 작성자만 삭제 가능하도록 추가
