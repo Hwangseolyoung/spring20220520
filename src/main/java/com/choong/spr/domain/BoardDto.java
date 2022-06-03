@@ -20,6 +20,8 @@ public class BoardDto {
 	// 1개 파일 업로드 추가
 	// 여러파일 선택할 수 있도록 변경 String -> List<String>
 	private List<String> fileName;
+	// 파일 유무 파악
+	private boolean hasFile;
 
 	public String getPrettyInserted() {
 		// 24시간 이내면 시간만
