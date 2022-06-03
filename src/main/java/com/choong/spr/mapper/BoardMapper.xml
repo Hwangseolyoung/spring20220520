@@ -10,10 +10,12 @@
 		SELECT b.id, 
 			   b.title, 
 			   b.inserted, 
-			   COUNT(r.id) numOfReply,
-			   m.nickName writerNickName  <!-- member nickName추가함 -->
+			   COUNT(DISTINCT r.id) numOfReply,
+			   m.nickName writerNickName,  <!-- member nickName추가함 -->
+			   COUNT(f.id) hasFile <!-- 파일 존재여부 확인 -->
 		FROM Board b LEFT JOIN Reply r ON b.id = r.board_id
 						  JOIN Member m ON b.memberId = m.id <!-- member nickName추가함 -->
+					 LEFT JOIN File f ON b.id = f.boardId <!-- 파일 존재여부 확인 -->	  
 		
 		<!-- if test 조건에 의해 WHERE이 실행될 수도 있고 안될수도 있다. -->
 		<!-- 실행이 안되면 기존 Board 목록이 화면에 출력된다. -->
@@ -108,4 +110,11 @@
 		FROM File
 		WHERE boardId = #{boardId}
 	</select>
+	
+	<!-- 게시글 수정시 선택한 파일만 지우기 --> 
+	<delete id="deleteFileByBoardIdAndFileName">
+		DELETE FROM File
+		WHERE boardId = #{boardId}
+		AND fileName = #{fileName}
+	</delete>
 </mapper>
