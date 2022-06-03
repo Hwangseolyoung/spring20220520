@@ -28,6 +28,11 @@
 			$("#textarea1").removeAttr("readonly");
 			$("#modify-submit1").removeClass("d-none");
 			$("#delete-submit1").removeClass("d-none");
+			// 글 수정할때 파일 추가 버튼이 보이도록 추가함
+			$("#addFileInputContainer1").removeClass("d-none");
+			// 글 수정할때 파일 삭제 버튼이 보이도록 추가함
+			$(".removeFileCheckbox").removeClass("d-none")
+			
 		});
 		
 		$("#delete-submit1").click(function(e) {
@@ -295,8 +300,8 @@
 						${message }
 					</div>
 				</c:if>
-				
-				<form id="form1" action="${appRoot }/board/modify" method="post">
+				<!-- 수정시 파일 추가 기능 위에 꼭 넣어줘야함 enctype="multipart/form-data" -->
+				<form id="form1" action="${appRoot }/board/modify" method="post" enctype="multipart/form-data">
 					<input type="hidden" name="id" value="${board.id }"/>
 					
 					<div>
@@ -313,10 +318,35 @@
 					
 					<!-- AWS s3 파일 여러개 추가함 -->
 					<c:forEach items="${board.fileName }" var="file">
-						<div>
-							<img src="${imageUrl }/board/${board.id }/${file }" alt="" />
+						<%
+						/* 특수기호가 포함된 파일명 encoding */
+						String file = (String) pageContext.getAttribute("file");
+						String encodedFileName = java.net.URLEncoder.encode(file, "utf-8");
+						pageContext.setAttribute("encodedFileName", encodedFileName);
+						
+						%>
+						<div class="row">
+							<div class="col-1">
+								<div class="d-none removeFileCheckbox">
+									삭제 <br /> <!-- 수정시 file 삭제 버튼 추가 -->
+									<input type="checkbox" name="removeFileList" value="${file }"/>
+								</div>
+							</div>
+							<div class="col-11">
+								<div> <!-- class="img-fluid" :화면 크기를 넘지 않도록 설정 -->
+									<img class="img-fluid" src="${imageUrl }/board/${board.id }/${encodedFileName }" alt="" />
+								</div>
+							</div>
 						</div>
 					</c:forEach>
+					
+					<!-- 글을 수정할 때 파일을 추가할 수 있도록 -->
+					<!-- class="d-none" : 게시물을 볼때는 안보이도록 (수정버튼 누르면 보임) -->
+					<!-- script에 수정 버튼 누르면 보이도록 코드 추가 -->
+					<div id="addFileInputContainer1" class="d-none"> 
+						파일 추가 :
+						<<input type="file" multiple="multiple" accept="image/*" name="addFileList" />
+					</div>
 					
 					<div>
 						<label for="input3" class="form-label">작성자</label>
