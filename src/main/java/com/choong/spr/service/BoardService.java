@@ -36,10 +36,13 @@ public class BoardService {
 	@Autowired
 	private ReplyMapper replyMapper;
 	
-	// AWS 파일 업로드 
+	// AWS 파일 업로드 (파일을 넣고 지울때 사용함)
+	// s3의 type은 S3Client
 	private S3Client s3;
 	
-	// @Value : 프로퍼티즈 내용을 쓸 수 있는 어노테이션 
+	// bucket : bucketName 객체를 만들어서 spring으로 부터 주입받아 사용할 수 있도록
+	// bucketName properties 파일을 따로 만들 어야 하지만 내용이 간단하므로 어노테이션 사용
+	// @Value : properties 파일 내용을 쓸 수 있는 어노테이션 
 	@Value("${aws.s3.bucketName}")
 	private String bucketName;
 	
@@ -48,10 +51,13 @@ public class BoardService {
 		return mapper.selectBoardAll(type, "%" + keyword +"%");
 	}
 	
-	@PostConstruct // 객체가 생성되자 마자 실행되는 메소드
-	public void init() {
-		Region region = Region.AP_NORTHEAST_2;
-		this.s3 = S3Client.builder().region(region).build();
+	// @Service 어노테이션에 component가 숨겨져있어서 객체로 만들어짐
+	@PostConstruct // 객체가 생성되자 마자 실행되도록 정의해서 메소드를 만듬
+	public void init() { // Service가 실행되자 마자 실행되도록 init으로 만듬
+		Region region = Region.AP_NORTHEAST_2; // region 지역-서울
+		// S3Client.builder() - s3에 값 할당
+		// region(region) - 지역, credential 권한(생략가능)
+		this.s3 = S3Client.builder().region(region).build(); 
 	}
 	
 	@PreDestroy // s3 자원 닫아주기
@@ -83,8 +89,8 @@ public class BoardService {
 				if (file.getSize() > 0) {
 					mapper.insertFile(id, file.getOriginalFilename());
 					// 파일 저장 코드 추가(폴더만들기용:board.getId())
-					/* saveFile(board.getId(), file); */
-					saveFileAwsS3(id, file); // s3에 업로드
+					/* saveFile(board.getId(), file); // 파일 시스템에 저장 */
+					saveFileAwsS3(id, file); // s3에 업로드(게시판 아이디, 파일)
 				}
 	
 			}
@@ -93,25 +99,34 @@ public class BoardService {
 	
 	// s3에 업로드 메소드(addFiles에서 사용함)
 	private void saveFileAwsS3(int id, MultipartFile file) {
-		// 파일 객체마다 키를 가지고 있다.
-		// 키 - 폴더명과 파일명의 조합
+		// bucket 객체(파일)을 넣어주면 bucket안에서 유일하게 구분할 수 있는 key를 생성
+		// key - 폴더명과 파일명의 조합
+		// (폴더명 + id(게시물의 프라이머리키) + file.getOriginalFilename()실제 파일명)
 		String key = "board/" + id + "/" + file.getOriginalFilename();
 		
-		// 버킷, key, 권한 
-		PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-				.acl(ObjectCannedACL.PUBLIC_READ) // 권한
-				.bucket(bucketName) // 버킷
-				.key(key) // key
-				.build(); // 빌드 하면 만들어짐
+		// putObjectRequest : 업로드하려는 대상 bucket, key, 권한 등이 필요하다.
+		// putObjectRequest의 builder메소드를 사용해서 bucket, key, acl(권한)을 담아준다.
 		
-		// 파일 자체가 들어가면됨 ( , 파일 사이즈)
+		PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+				.acl(ObjectCannedACL.PUBLIC_READ) // 권한, PUBLIC_READ 외부에서 읽을 수 있도록
+				.bucket(bucketName) // bucketName 객체를 만들어서 spring으로 부터 주입받아 사용할 수 있도록
+				// bucket 객체(파일)을 넣어주면 bucket안에서 유일하게 구분할 수 있는 key를 생성함
+				// key는 폴더명 +  파일이름의 조합이다.
+				.key(key) 
+				.build(); // build하면 만들어짐
+		
+		// RequestBody : 파일 자체가 들어가면됨 RequestBody의 static method fromInputStream 사용 
+		// MultipartFile의 fromInputStream을 꺼내는 메소드를 사용-file.getInputStream() 
+		// file.getSize() 파일의 크기
 		RequestBody requestBody;
 		try {                                           // getInputStream() 체크드 익셉션 발생 가능성 있음
 			requestBody = RequestBody.fromInputStream(file.getInputStream(), file.getSize());
+			// putObject : s3에 파일을 업로드할때 사용하는 메소드
+			// 파라미터는 2개의 객체를 받는다.(putObjectRequest, requestBody)
 			s3.putObject(putObjectRequest, requestBody);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
 			throw new RuntimeException(e);
 		}
 	}
@@ -132,6 +147,8 @@ public class BoardService {
 			file.transferTo(des);
 		} catch (IllegalStateException | IOException e) {
 			e.printStackTrace();
+			// 위에서 @Transactional 사용함으로 오류를 잡고 끝내면 안된다.
+			// 오류를 발생시켜줘야 @Transactional 이 제대로 실행된다. 
 			throw new RuntimeException(e);
 		}
 		
