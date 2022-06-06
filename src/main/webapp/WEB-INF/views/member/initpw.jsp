@@ -16,11 +16,24 @@
 
 	<my:navBar current="initpw"></my:navBar>
 
-	<form method="post">
-		아이디 : <input type="text" name="id" /> <br/>
-		<input type="submit" value="초기화" />
-	</form>
-
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-12 col-lg-6">
+				<h1>암호 초기화</h1>
+				<form method="post">
+					<label for="idInput1" class="form-label">
+						초기화할 아이디 
+					</label>
+					
+					<input id="idInput1" class="form-control" type="text" name="id" />
+					
+					<div class="form-text mb-3">암호는 아이디로 초기화 됩니다.</div>
+					
+					<input class="btn btn-primary" type="submit" value="초기화" />
+				</form>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>

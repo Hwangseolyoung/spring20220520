@@ -190,26 +190,65 @@
 	<!-- 로그인한 회원만 정보보기로 변경 get -> memberInfo -->
 	<my:navBar current="memberInfo"></my:navBar>
 	
-	<div>
-		<p>${message }</p>
-	</div>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-12 col-lg-6">
 	
-	<div>
-		아이디 : <input type="text" value="${member.id }" readonly/> <br /> <%-- readonly 변경불가능 --%>
-		패스워드 : <input type="password" name="password" id="passwordInput1"> <br />
-		패스워드 확인 : <input type="password"  name="pwConfirm" id="passwordInput2"/> <br /> 
-						<p id="passwordMessage1"></p> <br /> 
-		이메일 : <input type="text" value="${member.email }" name="email" id="emailInput1"/> <button id="checkEmailButton1" disabled >이메일 중복확인</button> <br />
-				<p id="emailMessage1"></p> <br /> 
-		닉네임 : <input type="text" value="${member.nickName }" name="nickName" id="nickNameInput1"/> <button id="checkNickNameButton1" disabled >닉네임 중복확인</button> <br />
-				<p id="nickNameMessage1"></p> <br /> 
-		가입일시 : <input type="datetime-local" value="${member.inserted }" readonly/> <br /> <%-- readonly 변경불가능 --%>
-	</div>
-	
-	<div>
-		<!-- 회원 정보 수정&삭제  -->
-		<button disabled id="modifyButton1" data-bs-toggle="modal" data-bs-target="#modal2" disabled>수정</button>
-		<button data-bs-toggle="modal" data-bs-target="#modal1">삭제</button>
+				<h1>회원 정보 보기</h1>
+				
+				<div>
+					<p>${message }</p>
+				</div>
+				
+				<div>
+					<label for="idInput1" class="form-label">
+					아이디
+					</label>
+					<input id="idInput1" class="form-control" type="text" value="${member.id }" readonly /> <!-- readonly 수정불가 -->
+					
+					<label for="passwordInput1" class="form-label">
+					암호
+					</label>
+					<input class="form-control" id="passwordInput1" type="password" value=""  />
+					
+					<label for="passwordInput2" class="form-label">
+					암호확인
+					</label>
+					<input class="form-control" id="passwordInput2" type="password" value=""  />
+					<p class="form-text" id="passwordMessage1"></p>
+					
+					<label for="emailInput1" class="form-label">
+					이메일
+					</label>
+					<div class="input-group">
+						<input class="form-control" id="emailInput1" type="email" value="${member.email }" /> 
+						<button class="btn btn-secondary" id="checkEmailButton1" disabled>이메일중복확인</button>
+					</div>
+					<p class="form-text" id="emailMessage1"></p>
+					
+					<label for="nickNameInput1" class="form-label">
+					닉네임
+					</label>
+					
+					<div class="input-group">
+						<input class="form-control" id="nickNameInput1" type="text" value="${member.nickName }" /> 
+						<button class="btn btn-secondary" id="checkNickNameButton1" disabled>닉네임중복확인</button>
+					</div>
+					<p class="form-text" id="nickNameMessage1"></p>
+					
+					<label for="" class="form-label">
+					가입일시
+					</label>
+					<input class="form-control" type="datetime-local" value="${member.inserted }" readonly />
+				</div>	
+				
+				<!-- 회원 정보 수정&삭제  -->
+				<div class="mt-3">
+					<button class="btn btn-success" id="modifyButton1" data-bs-toggle="modal" data-bs-target="#modal2" disabled>수정</button>
+					<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal1">삭제</button>
+				</div>
+			</div>
+		</div>
 	</div>
 	
 	<!-- 삭제 Modal  -->

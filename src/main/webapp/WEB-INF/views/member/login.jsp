@@ -72,7 +72,7 @@
 		font-size: 18px; color: #999;
 	}
 	
-	
+	/* 실행 안됨
 	.userInfo label.warning {
 		color: red !important;
 		animation: warning .3s ease;
@@ -84,6 +84,7 @@
 	    50% {transform: translateX(-8px);}
 	    75% {transform: translateX(8px);}
 	}	
+	*/
 	
 	.form-check {margin-top: 30px;}
 	.form-check button {
